@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
@@ -70,7 +69,7 @@ namespace CrashKonijn.Goap.Runtime
                     continue;
                 }
 
-                // result.Actions is the handle's reused list: read it here, copy it only when kept.
+                // result.Actions is the handle's reused list: read it here, NextResult copies it when kept.
                 var action = result.Actions.Count > 0 ? result.Actions[0] as IGoapAction : null;
 
                 if (action is null)
@@ -80,12 +79,7 @@ namespace CrashKonijn.Goap.Runtime
                 }
 
                 if (action != resolveHandle.ActionProvider.Receiver.ActionState.Action)
-                    resolveHandle.ActionProvider.SetAction(new GoalResult
-                    {
-                        Goal = goal,
-                        Plan = result.Actions.ToArray(),
-                        Action = action
-                    });
+                    resolveHandle.ActionProvider.SetAction(resolveHandle.ActionProvider.NextResult(goal, action, result.Actions));
             }
 
             this.resolveHandles.Clear();

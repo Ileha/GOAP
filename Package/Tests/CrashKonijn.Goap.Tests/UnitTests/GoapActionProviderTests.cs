@@ -46,5 +46,31 @@ namespace CrashKonijn.Goap.UnitTests
             // Assert
             events.Received().GoalStart(goal);
         }
+
+        [Test]
+        public void NextResult_KeepsPreviousResultUntilBufferIsReused()
+        {
+            // Arrange
+            var gameObject = new GameObject();
+            var provider = gameObject.AddComponent<GoapActionProvider>();
+
+            var firstGoal = Substitute.For<IGoal>();
+            var secondGoal = Substitute.For<IGoal>();
+            var firstAction = Substitute.For<IGoapAction>();
+            var secondAction = Substitute.For<IGoapAction>();
+
+            // Act
+            var first = provider.NextResult(firstGoal, firstAction, new IConnectable[] { firstAction });
+            var second = provider.NextResult(secondGoal, secondAction, new IConnectable[] { secondAction, firstAction });
+            var third = provider.NextResult(secondGoal, secondAction, new IConnectable[] { secondAction });
+
+            // Assert
+            Assert.AreNotSame(first, second);
+            Assert.AreSame(first, third);
+            Assert.AreSame(secondGoal, second.Goal);
+            Assert.AreEqual(2, second.Plan.Count);
+            Assert.AreSame(firstAction, second.Plan[1]);
+            Assert.AreEqual(1, third.Plan.Count);
+        }
     }
 }

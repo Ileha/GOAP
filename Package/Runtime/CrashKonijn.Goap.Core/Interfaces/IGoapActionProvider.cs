@@ -53,6 +53,7 @@ namespace CrashKonijn.Goap.Core
         void RequestGoal(IGoal goal, bool resolve = true);
         void RequestGoal(IGoalRequest request, bool resolve = true);
 
+        IGoalResult NextResult(IGoal goal, IGoapAction action, IReadOnlyList<IConnectable> plan);
         void SetAction(IGoalResult result);
         void ClearGoal();
         void StopAction(bool resolveAction = true);
