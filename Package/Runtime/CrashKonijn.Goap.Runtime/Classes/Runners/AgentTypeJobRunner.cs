@@ -38,16 +38,16 @@ namespace CrashKonijn.Goap.Runtime
             agentType.SensorRunner.InitializeGraph(graphResolver.GetGraph());
         }
 
-        public void Run(IMonoGoapActionProvider[] queue)
+        public void Run(IReadOnlyList<IMonoGoapActionProvider> queue)
         {
             this.resolveHandles.Clear();
 
             this.agentType.SensorRunner.Update();
             this.agentType.SensorRunner.SenseGlobal();
 
-            foreach (var agent in queue)
+            for (var i = 0; i < queue.Count; i++)
             {
-                this.Run(agent);
+                this.Run(queue[i]);
             }
         }
 
@@ -70,7 +70,8 @@ namespace CrashKonijn.Goap.Runtime
                     continue;
                 }
 
-                var action = result.Actions.FirstOrDefault() as IGoapAction;
+                // result.Actions is the handle's reused list: read it here, copy it only when kept.
+                var action = result.Actions.Count > 0 ? result.Actions[0] as IGoapAction : null;
 
                 if (action is null)
                 {
@@ -82,7 +83,7 @@ namespace CrashKonijn.Goap.Runtime
                     resolveHandle.ActionProvider.SetAction(new GoalResult
                     {
                         Goal = goal,
-                        Plan = result.Actions,
+                        Plan = result.Actions.ToArray(),
                         Action = action
                     });
             }
@@ -144,11 +145,17 @@ namespace CrashKonijn.Goap.Runtime
                 this.goalIndexes.Add(this.resolver.GetIndex(goal));
             }
 
+            var startIndex = new NativeArray<int>(this.goalIndexes.Count, Allocator.TempJob);
+            for (var i = 0; i < this.goalIndexes.Count; i++)
+            {
+                startIndex[i] = this.goalIndexes[i];
+            }
+
             this.resolveHandles.Add(new JobRunHandle(actionProvider, goalRequest)
             {
                 Handle = this.resolver.StartResolve(new RunData
                 {
-                    StartIndex = new NativeArray<int>(this.goalIndexes.ToArray(), Allocator.TempJob),
+                    StartIndex = startIndex,
                     AgentPosition = actionProvider.Position,
                     IsEnabled = new NativeArray<bool>(this.enabledBuilder.Build(), Allocator.TempJob),
                     IsExecutable = new NativeArray<bool>(this.executableBuilder.Build(), Allocator.TempJob),
@@ -272,9 +279,9 @@ namespace CrashKonijn.Goap.Runtime
 #endif
         }
 
-        private class JobRunHandle
+        private struct JobRunHandle
         {
-            public JobRunHandle(IMonoGoapActionProvider actionProvider, IGoalRequest goalRequest)
+            public JobRunHandle(IMonoGoapActionProvider actionProvider, IGoalRequest goalRequest) : this()
             {
                 this.ActionProvider = actionProvider;
                 this.GoalRequest = goalRequest;

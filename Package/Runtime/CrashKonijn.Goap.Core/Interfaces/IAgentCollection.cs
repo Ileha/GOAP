@@ -8,7 +8,7 @@ namespace CrashKonijn.Goap.Core
         void Add(IMonoGoapActionProvider actionProvider);
         void Remove(IMonoGoapActionProvider actionProvider);
         void Enqueue(IMonoGoapActionProvider actionProvider);
-        IMonoGoapActionProvider[] GetQueue();
+        IReadOnlyList<IMonoGoapActionProvider> GetQueue();
         int GetQueueCount();
     }
 }
