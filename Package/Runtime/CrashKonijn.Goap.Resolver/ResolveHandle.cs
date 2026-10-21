@@ -81,15 +81,16 @@ namespace CrashKonijn.Goap.Resolver
 
             return new JobResult
             {
-                Actions = this.results.ToArray(),
+                Actions = this.results,
                 Goal = goal,
             };
         }
     }
 
-    public class JobResult
+    public struct JobResult
     {
-        public IConnectable[] Actions { get; set; }
+        // Reused by the pooled handle: valid until its next Start.
+        public IReadOnlyList<IConnectable> Actions { get; set; }
         public IGoal Goal { get; set; }
     }
 }

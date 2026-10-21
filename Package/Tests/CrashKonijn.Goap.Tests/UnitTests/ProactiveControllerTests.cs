@@ -91,7 +91,7 @@ namespace CrashKonijn.Goap.UnitTests
             this.proactiveController.OnUpdate();
 
             // Assert
-            this.runner.Received().Run(Arg.Any<IMonoGoapActionProvider[]>());
+            this.runner.Received().Run(Arg.Any<IReadOnlyList<IMonoGoapActionProvider>>());
         }
 
         [Test]

@@ -42,6 +42,9 @@ namespace CrashKonijn.Goap.Runtime
         public IGoalResult CurrentPlan { get; private set; } = new GoalResult();
         public IGoalRequest GoalRequest { get; private set; }
         private IGoalRequest requestCache = new GoalRequest();
+        private readonly GoalResult[] results = { new(), new() };
+        private readonly List<IConnectable>[] resultPlans = { new(), new() };
+        private int resultIndex;
 
         public ILocalWorldData WorldData { get; } = new LocalWorldData();
         public IGoapAgentEvents Events { get; } = new GoapAgentEvents();
@@ -287,6 +290,26 @@ namespace CrashKonijn.Goap.Runtime
             }
 
             return true;
+        }
+
+        /// <summary>
+        ///     Fills a reused goal result for the next SetAction call. Two buffers swap, so CurrentPlan stays valid
+        ///     while SetAction compares it with the new result.
+        /// </summary>
+        public IGoalResult NextResult(IGoal goal, IGoapAction action, IReadOnlyList<IConnectable> plan)
+        {
+            this.resultIndex ^= 1;
+
+            var resultPlan = this.resultPlans[this.resultIndex];
+            resultPlan.Clear();
+            resultPlan.AddRange(plan);
+
+            var result = this.results[this.resultIndex];
+            result.Goal = goal;
+            result.Action = action;
+            result.Plan = resultPlan;
+
+            return result;
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace CrashKonijn.Goap.Runtime
     public class GoalResult : IGoalResult
     {
         public IGoal Goal { get; set; }
-        public IConnectable[] Plan { get; set; }
+        public IReadOnlyList<IConnectable> Plan { get; set; }
         public IGoapAction Action { get; set; }
     }
 }

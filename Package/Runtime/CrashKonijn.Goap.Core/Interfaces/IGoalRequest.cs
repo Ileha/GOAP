@@ -11,7 +11,7 @@ namespace CrashKonijn.Goap.Core
     public interface IGoalResult
     {
         IGoal Goal { get; }
-        IConnectable[] Plan { get; }
+        IReadOnlyList<IConnectable> Plan { get; }
         IGoapAction Action { get; }
     }
 }

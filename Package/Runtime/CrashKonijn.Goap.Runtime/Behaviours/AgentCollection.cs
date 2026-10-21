@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using CrashKonijn.Goap.Core;
 
 namespace CrashKonijn.Goap.Runtime
@@ -9,6 +8,7 @@ namespace CrashKonijn.Goap.Runtime
         private readonly IAgentType agentType;
         private HashSet<IMonoGoapActionProvider> agents = new();
         private HashSet<IMonoGoapActionProvider> queue = new();
+        private readonly List<IMonoGoapActionProvider> queueBuffer = new();
 
         public AgentCollection(IAgentType agentType)
         {
@@ -48,13 +48,15 @@ namespace CrashKonijn.Goap.Runtime
 
         public int GetQueueCount() => this.queue.Count;
 
-        public IMonoGoapActionProvider[] GetQueue()
+        // Reused buffer: valid until the next GetQueue call. Agents enqueued while it is read go to the next frame.
+        public IReadOnlyList<IMonoGoapActionProvider> GetQueue()
         {
-            var data = this.queue.ToArray();
+            this.queueBuffer.Clear();
+            this.queueBuffer.AddRange(this.queue);
 
             this.queue.Clear();
 
-            return data;
+            return this.queueBuffer;
         }
     }
 }
