@@ -3,7 +3,6 @@ using CrashKonijn.Goap.Core;
 using CrashKonijn.Goap.Runtime;
 using CrashKonijn.Goap.UnitTests.Data;
 using CrashKonijn.Goap.UnitTests.Support;
-using FluentAssertions;
 using NUnit.Framework;
 using Unity.Collections;
 
@@ -34,7 +33,7 @@ namespace CrashKonijn.Goap.UnitTests
             var result = resolver.Load<IGoal, IGoalConfig>(new[] { GoalConfig.Create<Goal>() });
 
             // Assert
-            result.First().Should().BeOfType<Goal>();
+            Assert.That(result.First(), Is.TypeOf<Goal>());
         }
 
         [Test]
@@ -47,7 +46,7 @@ namespace CrashKonijn.Goap.UnitTests
             var result = resolver.Load<ITargetSensor, ITargetSensorConfig>(new[] { new TargetSensorConfig<LocalTargetSensor>() });
 
             // Assert
-            result.First().Should().BeOfType<LocalTargetSensor>();
+            Assert.That(result.First(), Is.TypeOf<LocalTargetSensor>());
         }
 
         [Test]
@@ -60,7 +59,7 @@ namespace CrashKonijn.Goap.UnitTests
             var result = resolver.Load<IWorldSensor, IWorldSensorConfig>(new[] { new WorldSensorConfig<LocalWorldSensor>() });
 
             // Assert
-            result.First().Should().BeOfType<LocalWorldSensor>();
+            Assert.That(result.First(), Is.TypeOf<LocalWorldSensor>());
         }
     }
 }

@@ -4,7 +4,6 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "BoundfoxStudios.FluentAssertions",
         "Unity.Mathematics",
         "CrashKonijn.Goap.Core",
         "CrashKonijn.Goap.Runtime",
