@@ -5,7 +5,6 @@ using CrashKonijn.Goap.Core;
 using CrashKonijn.Goap.Runtime;
 using CrashKonijn.Goap.UnitTests.Classes;
 using CrashKonijn.Goap.UnitTests.Support;
-using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Unity.Collections;
@@ -119,7 +118,7 @@ namespace CrashKonijn.Goap.UnitTests
             this.provider.RequestGoal<TestGoal>(false);
 
             // Assert
-            this.provider.GoalRequest.Goals.Should().ContainItemsAssignableTo<TestGoal>();
+            Assert.That(this.provider.GoalRequest.Goals, Is.Not.Empty.And.All.InstanceOf<TestGoal>());
         }
 
         [Test]
@@ -179,7 +178,7 @@ namespace CrashKonijn.Goap.UnitTests
             });
 
             // Assert
-            this.provider.Receiver.ActionState.Action.Should().Be(action);
+            Assert.That(this.provider.Receiver.ActionState.Action, Is.EqualTo(action));
         }
 
         [Test]
@@ -252,7 +251,7 @@ namespace CrashKonijn.Goap.UnitTests
             });
 
             // Assert
-            this.provider.Receiver.ActionState.Data.Should().Be(actionData);
+            Assert.That(this.provider.Receiver.ActionState.Data, Is.EqualTo(actionData));
         }
 
         [Test]
@@ -300,7 +299,7 @@ namespace CrashKonijn.Goap.UnitTests
             });
 
             // Assert
-            this.provider.CurrentPlan.Plan.Should().BeSameAs(path);
+            Assert.That(this.provider.CurrentPlan.Plan, Is.SameAs(path));
         }
 
         [Test]
@@ -362,7 +361,7 @@ namespace CrashKonijn.Goap.UnitTests
             this.agent.StopAction();
 
             // Assert
-            this.provider.Receiver.ActionState.Action.Should().BeNull();
+            Assert.That(this.provider.Receiver.ActionState.Action, Is.Null);
         }
 
         [Test]
@@ -382,7 +381,7 @@ namespace CrashKonijn.Goap.UnitTests
             this.agent.StopAction();
 
             // Assert
-            this.provider.Receiver.ActionState.Data.Should().BeNull();
+            Assert.That(this.provider.Receiver.ActionState.Data, Is.Null);
         }
 
         [Test]

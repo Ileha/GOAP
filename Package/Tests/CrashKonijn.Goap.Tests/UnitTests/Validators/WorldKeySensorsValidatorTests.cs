@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using CrashKonijn.Goap.Core;
 using CrashKonijn.Goap.Runtime;
-using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
@@ -35,8 +34,8 @@ namespace CrashKonijn.Goap.UnitTests.Validators
             validator.Validate(config, results);
 
             // Assert
-            results.HasWarnings().Should().BeTrue();
-            results.HasErrors().Should().BeFalse();
+            Assert.That(results.HasWarnings(), Is.True);
+            Assert.That(results.HasErrors(), Is.False);
         }
 
         [Test]
@@ -69,8 +68,8 @@ namespace CrashKonijn.Goap.UnitTests.Validators
             validator.Validate(config, results);
 
             // Assert
-            results.HasWarnings().Should().BeFalse();
-            results.HasErrors().Should().BeFalse();
+            Assert.That(results.HasWarnings(), Is.False);
+            Assert.That(results.HasErrors(), Is.False);
         }
 
         [Test]
@@ -99,8 +98,8 @@ namespace CrashKonijn.Goap.UnitTests.Validators
             validator.Validate(config, results);
 
             // Assert
-            results.HasWarnings().Should().BeFalse();
-            results.HasErrors().Should().BeFalse();
+            Assert.That(results.HasWarnings(), Is.False);
+            Assert.That(results.HasErrors(), Is.False);
         }
 
         [Test]
@@ -122,8 +121,8 @@ namespace CrashKonijn.Goap.UnitTests.Validators
             validator.Validate(config, results);
 
             // Assert
-            results.HasWarnings().Should().BeFalse();
-            results.HasErrors().Should().BeFalse();
+            Assert.That(results.HasWarnings(), Is.False);
+            Assert.That(results.HasErrors(), Is.False);
         }
     }
 }
